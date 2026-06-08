@@ -1,0 +1,206 @@
+{
+  "name": "Workflow A -the producer",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -432,
+        -112
+      ],
+      "id": "950a7638-565b-4b94-819b-edcecd1bd824",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:5678/webhook/process-order-12",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "order_id",
+              "value": "5012"
+            },
+            {
+              "name": "customer",
+              "value": "Acme Corp"
+            },
+            {
+              "name": "amount",
+              "value": "249.99"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -256,
+        -112
+      ],
+      "id": "42952ee2-239e-44e6-9fc7-2754fb1ae767",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "652b5644-ced0-439d-b080-bf4ef0321186",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "={{ $json.processed }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -48,
+        -112
+      ],
+      "id": "028694cb-3ff1-467a-9097-6edaa9ff72a6",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0053bbba-c937-4b47-be79-ed9b64fb6ed5",
+              "name": "result",
+              "value": "Order sent successfully, ",
+              "type": "string"
+            },
+            {
+              "id": "3042a5f0-47fb-4b7d-8589-b0a6f56f803f",
+              "name": "order_id",
+              "value": "={{ $json.order_id }}",
+              "type": "string"
+            },
+            {
+              "id": "02009865-dd6d-40b0-91bd-12d7acbbbd53",
+              "name": "processed_at",
+              "value": "={{ $json.processed_at }}",
+              "type": "string"
+            },
+            {
+              "id": "9ce9f08d-3a49-457e-a328-43e6072b8ae8",
+              "name": "",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        160,
+        -185.5
+      ],
+      "id": "0ff0a5d9-82a5-4bb2-983c-b46e1c73656c",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "57092e77-9593-4e4e-9e49-706296a10edc",
+              "name": "result",
+              "value": "Order delivery failed",
+              "type": "string"
+            },
+            {
+              "id": "919cd203-7534-49bc-8b41-02ab721ad057",
+              "name": "error",
+              "value": "Unexpected response from consumer workflow",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        160,
+        -16
+      ],
+      "id": "c1783bfe-4529-443d-9abb-1fba9dbc4bd5",
+      "name": "Edit Fields1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "fe44a425-33fb-4176-b0c5-244913a45a66",
+  "meta": {
+    "instanceId": "9dbe6e9adaa7644a782c9475adca697617306074a3b354c01045885272a5c8fe"
+  },
+  "id": "xTFMEZ48ffiYLlyE",
+  "tags": []
+}

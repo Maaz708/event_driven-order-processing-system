@@ -1,0 +1,119 @@
+{
+  "name": "1.2.1 - Consumer Workflow B (Starter)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "process-order-12",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "f0d58b5b-a35c-4a89-afa4-7035edd99941",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -240,
+        -48
+      ],
+      "webhookId": "process-order-12"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "field-status",
+              "name": "status",
+              "value": "processed",
+              "type": "string"
+            },
+            {
+              "id": "field-order-id",
+              "name": "order_id",
+              "value": "={{ $json.body.order_id }}",
+              "type": "number"
+            },
+            {
+              "id": "field-customer",
+              "name": "customer",
+              "value": "={{ $json.body.customer }}",
+              "type": "string"
+            },
+            {
+              "id": "field-amount",
+              "name": "amount",
+              "value": "={{ $json.body.amount }}",
+              "type": "number"
+            },
+            {
+              "id": "field-processed-at",
+              "name": "processed_at",
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "737beffc-e55b-4bbf-a148-86ddf1ee5b7c",
+      "name": "Add Processing Info",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -16,
+        -48
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "1f424b23-b3ef-442a-92b2-92398de20507",
+      "name": "Respond With Confirmation",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        208,
+        -48
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Add Processing Info",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Processing Info": {
+      "main": [
+        [
+          {
+            "node": "Respond With Confirmation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4dfa3d92-0be4-40d3-8399-88cdc6077a93",
+  "meta": {
+    "instanceId": "9dbe6e9adaa7644a782c9475adca697617306074a3b354c01045885272a5c8fe"
+  },
+  "id": "0ooeSpsDyPI212nB",
+  "tags": []
+}

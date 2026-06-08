@@ -1,0 +1,229 @@
+{
+  "name": "Scheduled workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 30
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -400,
+        0
+      ],
+      "id": "c07e88ac-9858-44a0-8963-ea68759f0c87",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b1cef227-94ac-49fa-af53-6c6e0bb413fe",
+              "name": "run_reason ",
+              "value": "Scheduled health check",
+              "type": "string"
+            },
+            {
+              "id": "fee44e8e-7df3-4700-bac7-ee59e7c153b2",
+              "name": "run_time",
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -272,
+        0
+      ],
+      "id": "294a75cf-0de5-4703-8ff6-f01107cc3189",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d7054c44-65ff-41c3-a86a-0b002cb9c40e",
+              "name": "status",
+              "value": "Skipped - outside business hours",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        16,
+        112
+      ],
+      "id": "924007e5-ea5d-4528-9053-fe9305b83512",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "5868d1f8-c025-43ca-b714-0f3e0a2c8224",
+              "leftValue": "={{ $now.hour >= 9 && $now.hour < 17 }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -144,
+        0
+      ],
+      "id": "af4b7564-a0c1-48ff-b6db-7ff1a32032e9",
+      "name": "If Business Hours"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "06553953-6f5f-4283-8ce7-86d092bd05cf",
+              "name": "order_id",
+              "value": 9001,
+              "type": "number"
+            },
+            {
+              "id": "fcecd483-5c31-4b50-820d-7aee15b130c7",
+              "name": "customer",
+              "value": "Scheduled Batch",
+              "type": "string"
+            },
+            {
+              "id": "401823ad-e70b-4d7d-8868-7644fb0e678b",
+              "name": "amount",
+              "value": 150,
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        64,
+        -96
+      ],
+      "id": "d0b73482-2016-46eb-9bfe-7e5b57aa3096",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:5678/webhook/process-order-12",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        272,
+        -96
+      ],
+      "id": "7171b527-99d8-48cf-a400-1470643b731e",
+      "name": "HTTP Request"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "If Business Hours",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Business Hours": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "8ea9267f-d051-492c-be61-a0fe12e2dee5",
+  "meta": {
+    "instanceId": "9dbe6e9adaa7644a782c9475adca697617306074a3b354c01045885272a5c8fe"
+  },
+  "id": "4cRQOJ0dR1EZPG1U",
+  "tags": []
+}
