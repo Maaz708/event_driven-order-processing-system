@@ -110,8 +110,15 @@ Processing confirmation is returned
 Add screenshots of:
 
 Producer Workflow
+<img width="1425" height="508" alt="Workflow A the producer" src="https://github.com/user-attachments/assets/c97bbef6-16bc-4c7e-a0b9-aae53b30b422" />
+
+
 Consumer Workflow
+<img width="1445" height="728" alt="Consumer Workflow" src="https://github.com/user-attachments/assets/9a44621a-63f7-4764-b1bd-c7923665f4bd" />
+
 Scheduled Workflow
+<img width="1392" height="720" alt="Scheduled Workflow" src="https://github.com/user-attachments/assets/66838b47-63f8-49df-accd-d362fcd64c5e" />
+
 
 Example:
 
