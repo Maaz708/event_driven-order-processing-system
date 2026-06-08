@@ -120,12 +120,7 @@ Scheduled Workflow
 <img width="1392" height="720" alt="Scheduled Workflow" src="https://github.com/user-attachments/assets/66838b47-63f8-49df-accd-d362fcd64c5e" />
 
 
-Example:
 
-screenshots/
-├── producer-workflow.png
-├── consumer-workflow.png
-└── scheduled-workflow.png
 🚀 Getting Started
 Prerequisites
 n8n installed locally or on cloud
